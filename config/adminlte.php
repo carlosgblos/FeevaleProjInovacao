@@ -308,7 +308,7 @@ return [
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Procurar',
         ],
         [
             'text' => 'blog',
@@ -366,12 +366,12 @@ return [
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'Logout',
+            'text' => 'Deslogar',
             'url' => '/logoff',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'change_password',
+            'text' => 'Mudar Senha',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ]
