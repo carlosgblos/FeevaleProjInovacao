@@ -1,0 +1,2 @@
+
+<?php echo $__env->make('adminlte::auth.register', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /media/psf/General/FeevaleProject/cgbBudgetAdminLTE/resources/views/auth/register.blade.php ENDPATH**/ ?>
