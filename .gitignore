@@ -1,0 +1,8 @@
+.env
+.idea/.gitignore
+.idea/cgbBudgetAdminLTE.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/php.xml
+.idea/phpunit.xml
+.idea/inspectionProfiles/Project_Default.xml
