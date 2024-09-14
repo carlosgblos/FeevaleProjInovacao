@@ -18,6 +18,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('movement_type', MovementTypeController::class);
     Route::resource('walletshared', WalletSharedToController::class);
     Route::resource('movement', \App\Http\Controllers\MovementController::class);
+    Route::resource('home', \App\Http\Controllers\DashboardController::class);
 
     Route::get('/movement_types/{walletId}', [\App\Http\Controllers\MovementController::class, 'getMovementTypes']);
 

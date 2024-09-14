@@ -45,6 +45,7 @@ class MovementController extends Controller
             $query->where('description', 'ilike', '%' . $request->description . '%');
         }
 
+
         $movements = $query->paginate(10);
 
         // Fetch movement types for the dropdown

@@ -315,6 +315,13 @@ return [
             'url' => 'admin/blog',
             'can' => 'manage-blog',
         ],
+        [
+            'text' => 'Dashboard',
+            'url' => '/home',
+            'icon' => 'far fa-fw fa-money',
+            //'label' => 4,
+            'label_color' => 'success',
+        ],
         ['header' => 'Carteira'],
         [
             'text' => 'Carteira',
@@ -441,7 +448,7 @@ return [
             ],
         ],
         'Chartjs' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

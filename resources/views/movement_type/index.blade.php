@@ -20,7 +20,7 @@
     <a href="{{ route('movement_type.create') }}" class="btn btn-primary mb-3">Adicionar Novo Tipo de Movimento</a>
 
     <div class="card">
-        <div class="card-header"> <!-- No additional class -->
+        <div class="card-header"> 
             <h3 class="card-title">Lista de Tipos de Movimento</h3>
         </div>
 

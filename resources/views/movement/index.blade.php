@@ -82,7 +82,7 @@
 
 
 <div class="card">
-    <div class="card-header"> <!-- No additional class -->
+    <div class="card-header"> 
         <h3 class="card-title">Lista de Movimentos</h3>
     </div>
 
@@ -91,6 +91,7 @@
             <thead>
             <tr>
                 <th>Descrição</th>
+                <th>Tipo de Movimento</th>
                 <th>Valor</th>
                 <th>Data</th>
                 <th>Tipo</th>
@@ -102,6 +103,7 @@
             @foreach ($movements as $movement)
             <tr>
                 <td>{{ $movement->description }}</td>
+                <td>{{ $movement->movementType->description ?? 'N/A' }}</td> <!-- Display Movement Type Description -->
                 <td>{{ number_format($movement->vlr, 2, ',', '.') }}</td>
                 <td>{{ $movement->transaction_at->format('d/m/Y') }}</td>
                 <td>{{ $movement->transaction_type == 'C' ? 'Crédito' : 'Débito' }}</td>
