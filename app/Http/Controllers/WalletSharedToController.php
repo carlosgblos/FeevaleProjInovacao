@@ -41,10 +41,13 @@ class WalletSharedToController extends Controller
         return redirect()->route('walletshared.index')->with('success', 'Carteira Compartilhada criada com sucesso.');
     }
 
-    public function edit(WalletSharedTo $walletSharedTo)
+    public function edit($id)
     {
+
+        $walletSharedTo = WalletSharedTo::with('wallet')->findOrFail($id);
+
         // Ensure that the wallet belongs to the authenticated user
-        if ($walletSharedTo->wallet->id_owner != auth()->id()) {
+        if ($walletSharedTo->wallet && $walletSharedTo->wallet->id_owner != auth()->id()) {
             abort(403);
         }
 
@@ -74,10 +77,13 @@ class WalletSharedToController extends Controller
         return redirect()->route('walletshared.index')->with('success', 'Carteira Compartilhada atualizada com sucesso.');
     }
 
-    public function destroy(WalletSharedTo $walletSharedTo)
+    public function destroy($id)
     {
+
+        $walletSharedTo = WalletSharedTo::with('wallet')->findOrFail($id);
+
         // Ensure that the wallet belongs to the authenticated user
-        if ($walletSharedTo->wallet->id_owner != auth()->id()) {
+        if ($walletSharedTo->wallet && $walletSharedTo->wallet->id_owner != auth()->id()) {
             abort(403);
         }
 
