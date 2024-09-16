@@ -15,6 +15,8 @@ class MovementController extends Controller
 
     public function index(Request $request)
     {
+        $startDate = '';
+        $endDate = '';
         $query = Movement::accessibleByUser();
 
         // Filter by movement type (dropdown selection)
@@ -22,13 +24,14 @@ class MovementController extends Controller
             $query->where('id_movement_type', $request->id_movement_type);
         }
 
-        // Filter by date range (if provided)
-        if ($request->has('transaction_at_start') && !empty($request->transaction_at_start)) {
-            $query->where('transaction_at', '>=', $request->transaction_at_start);
+        if ($request->filled('date_range')) {
+            $dateRange = explode(' - ', $request->date_range);
+            $startDate = Carbon::createFromFormat('d/m/Y', trim($dateRange[0]));
+            $endDate = Carbon::createFromFormat('d/m/Y', trim($dateRange[1]));
+
+            $query->whereBetween('transaction_at', [$startDate, $endDate]);
         }
-        if ($request->has('transaction_at_end') && !empty($request->transaction_at_end)) {
-            $query->where('transaction_at', '<=', $request->transaction_at_end);
-        }
+
 
         // Filter by wallet (if provided)
         if ($request->has('wallet_id') && !empty($request->wallet_id)) {
@@ -59,7 +62,7 @@ class MovementController extends Controller
         // Fetch wallets for the dropdown filter
         $wallets = Wallet::accessibleByUser()->get();
 
-        return view('movement.index', compact('movements', 'wallets', 'movementTypes'));
+        return view('movement.index', compact('movements', 'wallets', 'movementTypes', 'startDate', 'endDate'));
     }
 
     public function create()

@@ -52,7 +52,7 @@ class MovementType extends Model
         // Subquery for wallets the user owns or has access to
         $accessibleWallets = Wallet::where('id_owner', $userId)
             ->orWhereHas('sharedTo', function ($q) use ($userId) {
-                $q->where('email', Auth::user()->email);
+                $q->where('email', 'ilike', Auth::user()->email);
             });
 
         // Filter movement types either owned by the user or used in movements accessible to the user

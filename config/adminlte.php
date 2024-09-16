@@ -320,7 +320,7 @@ return [
             'url' => '/home',
             'icon' => 'far fa-fw fa-money',
             //'label' => 4,
-            'label_color' => 'success',
+            //'label_color' => 'success',
         ],
         ['header' => 'Carteira'],
         [
@@ -328,14 +328,14 @@ return [
             'url' => '/wallet',
             'icon' => 'far fa-fw fa-money',
             //'label' => 4,
-            'label_color' => 'success',
+            //'label_color' => 'success',
         ],
         [
             'text' => 'Compartilhar Carteira',
             'url' => '/walletshared',
             'icon' => 'far fa-fw fa-money',
             //'label' => 4,
-            'label_color' => 'success',
+            //'label_color' => 'success',
         ],
         [
             'text' => 'Moeda',
@@ -355,25 +355,20 @@ return [
         [
             'text' => 'Tipo de Movimento',
             'url' => '/movement_type',
-            'icon' => 'far fa-fw fa-money',
+            'icon' => 'fas fa-fw fa-money',
             //'label' => 4,
-            'label_color' => 'success',
+            //'label_color' => 'success',
         ],
         ['header' => 'Configuração de Conta'],
         [
-            'text' => 'Profile',
-            'url' => 'admin/settings',
+            'text' => 'Perfil',
+            'url' => 'profile',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'Deslogar',
             'url' => '/logoff',
             'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'Mudar Senha',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
         ]
     ],
 

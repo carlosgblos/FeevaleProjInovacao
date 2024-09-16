@@ -47,7 +47,7 @@
                                         @method('DELETE')
                                     </form>
                                     @else
-                                    <span class="text-muted">Sem permissão</span>
+                                    <span class="text-muted">Carteira Compartilhada!</span>
                                 @endif
                             </td>
                         </tr>

@@ -50,6 +50,9 @@
 <!-- Add a div to hold the charts and the table -->
 <div id="dashboard-content">
 
+
+
+
     <div class="row">
         @foreach($walletBalances as $wallet)
         <div class="col-md-3">
@@ -64,6 +67,19 @@
         </div>
         @endforeach
     </div>
+
+    <!-- Line Chart for Total Money by Day -->
+    <div class="row">
+        <div class="card col-12">
+            <div class="card-header">
+                <h3 class="card-title">Total Acumulado (Todas Carteiras)</h3>
+            </div>
+            <div class="card-body">
+                <canvas id="dailyTotalsChart"  style="max-height: 200px;"></canvas>
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-md-6">
@@ -148,9 +164,8 @@
         locale: {
             format: 'DD/MM/YYYY'
         },
-        startDate: moment().subtract(30, 'days'),  // 30 days ago from today
-        endDate: moment().endOf('month')           // End of the current month
-
+        startDate: @if ($startDate == '') moment().subtract(30, 'days') @else  moment('{{$startDate}}') @endif,  // 30 days ago from today
+        endDate: @if ($endDate == '') moment().endOf('month') @else  moment('{{$endDate}}') @endif          // End of the current month
     });
 
 
@@ -201,5 +216,56 @@
         }
     });
 
+
+    var dailyTotalsCtx = document.getElementById('dailyTotalsChart').getContext('2d');
+
+    // Daily Totals Line Chart (Cumulative)
+    var dailyTotalsChart = new Chart(dailyTotalsCtx, {
+        type: 'line',
+        data: {
+            labels: @json($dailyTotals['dates']),  // Dates as labels
+            datasets: [{
+                label: 'Total',
+                data: @json($dailyTotals['totals']),  // Cumulative totals as data points
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        tooltipFormat: 'DD/MM/YYYY'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Data'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Total Acumulado'
+                    },
+                    beginAtZero: true,
+                }
+            }
+        }
+    });
+
+@if ($forceReload == 'Y')
+$('#filterForm').submit();</script>
+@endif
+
 </script>
+
+
+
+
 @endsection

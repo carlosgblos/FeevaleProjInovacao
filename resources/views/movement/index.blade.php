@@ -46,14 +46,9 @@
         </select>
     </div>
 
-    <div class="form-group mr-3">
-        <label for="transaction_at_start" class="mr-2">Data Início</label>
-        <input type="text" name="transaction_at_start" id="transaction_at_start" class="form-control" placeholder="Data Início" value="{{ request()->get('transaction_at_start') }}">
-    </div>
-
-    <div class="form-group mr-3">
-        <label for="transaction_at_end" class="mr-2">Data Fim</label>
-        <input type="text" name="transaction_at_end" id="transaction_at_end" class="form-control" placeholder="Data Fim" value="{{ request()->get('transaction_at_end') }}">
+    <div class="form-group mr-5">
+        <label for="date_range" class="mr-2">Período</label>
+        <input type="text" name="date_range" id="date_range" style="width: 200px" class="form-control" placeholder="Selecionar Período" value="{{ request()->get('date_range') }}">
     </div>
 
     <div class="form-group mr-3">
@@ -131,7 +126,20 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script>
+    // Initialize the date range picker
+    $('#date_range').daterangepicker({
+        locale: {
+            format: 'DD/MM/YYYY'
+        },
+        startDate: @if ($startDate == '') moment().subtract(30, 'days') @else  moment('{{$startDate}}') @endif,  // 30 days ago from today
+    endDate: @if ($endDate == '') moment().endOf('month') @else  moment('{{$endDate}}') @endif          // End of the current month
+    });
+
     document.querySelectorAll('.btn-delete').forEach(function(button) {
         button.addEventListener('click', function() {
             const movementId = this.getAttribute('data-id');

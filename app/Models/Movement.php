@@ -25,6 +25,10 @@ class Movement extends Model
 
     protected $dates = ['transaction_at', 'deleted_at'];
 
+    protected $casts = [
+        'transaction_at' => 'date',  // Cast transaction_at as a datetime
+    ];
+
     // Automatically assign id_creator when inserting
     public static function boot()
     {
@@ -41,7 +45,7 @@ class Movement extends Model
         return $query->whereHas('wallet', function ($q) {
             $q->where('id_owner', Auth::id())
                 ->orWhereHas('sharedTo', function ($q) {
-                    $q->where('email', Auth::user()->email);
+                    $q->where('email', 'ilike', Auth::user()->email);
                 });
         });
     }

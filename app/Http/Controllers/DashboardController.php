@@ -8,16 +8,21 @@ use Illuminate\Http\Request;
 use App\Models\Movement;
 use App\Models\MovementType;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $forceReload = 'N';
+        $startDate = '';
+        $endDate = '';
         // Fetch filters
         $wallets = Wallet::accessibleByUser()->get();
         $movementTypes = MovementType::query()->accessibleByUser()->get();
         // Handle filtering based on request inputs (wallet, movement type, description, date range)
         $query = Movement::accessibleByUser();
+        $queryMinDate = Movement::accessibleByUser();
 
         if ($request->filled('wallet_id')) {
             $query->where('id_wallet', $request->wallet_id);
@@ -37,6 +42,14 @@ class DashboardController extends Controller
             $endDate = Carbon::createFromFormat('d/m/Y', trim($dateRange[1]));
 
             $query->whereBetween('transaction_at', [$startDate, $endDate]);
+
+            //$queryMinDate->select(DB::raw('SUM(case when transaction_type = \'C\' then vlr else vlr * -1 end) as balance'))
+            //->where('transaction_at', '<', $startDate);
+            //$lat = $queryMinDate->get();
+
+            //$oldTotal = $lat[0]['balance'];
+        } else {
+            $forceReload = 'Y';
         }
 
         // Retrieve data for charts
@@ -59,9 +72,62 @@ class DashboardController extends Controller
         $completedBalance = $this->calculateCompletedBalance($movements);
         $futureBalance = $this->calculateFutureBalance($movements);
 
+        // Calculate total money by day for the line chart
+        $dailyTotals = $this->getDailyTotals($movements);
+
         return view('dashboard', compact('wallets', 'movementTypes', 'movements', 'walletBalances', 'creditData', 'debitData', 'completedBalance', 'futureBalance', 'creditLabels', 'creditValues',
-            'debitLabels', 'debitValues'));
+            'debitLabels', 'debitValues',
+            'dailyTotals', 'forceReload', 'startDate', 'endDate' ));
     }
+
+    public function getDailyTotals($movements)
+    {
+        // If no movements, return empty data
+        if ($movements->isEmpty()) {
+            return [
+                'dates' => [],
+                'totals' => []
+            ];
+        }
+
+        // Get the earliest and latest transaction dates
+        $startDate = $movements->min('transaction_at')->startOfDay();
+        $endDate = $movements->max('transaction_at')->endOfDay();
+
+        // Initialize an array to store the cumulative totals by day
+        $dailyTotals = [];
+
+        // Initialize total
+        $cumulativeTotal = 0;
+
+        // Iterate over each day in the range
+        for ($date = $startDate; $date->lte($endDate); $date->addDay()) {
+            // Filter movements for this specific day
+            $dayMovements = $movements->filter(function($movement) use ($date) {
+                return $movement->transaction_at->isSameDay($date);
+            });
+
+            // Calculate the total for this day
+            foreach ($dayMovements as $movement) {
+                if ($movement->transaction_type == 'C') {
+                    $cumulativeTotal += $movement->vlr;  // Add credits
+                } else {
+                    $cumulativeTotal -= $movement->vlr;  // Subtract debits
+                }
+            }
+
+            // Store the cumulative total for this day
+            $dailyTotals[$date->format('Y-m-d')] = $cumulativeTotal;
+        }
+
+        // Return the totals, with the dates as keys
+        return [
+            'dates' => array_keys($dailyTotals),
+            'totals' => array_values($dailyTotals),
+        ];
+    }
+
+
 
     public function calculateWalletBalances($movements)
     {
